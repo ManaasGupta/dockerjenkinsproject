@@ -1,5 +1,13 @@
-# Use the official Maven image to build the application
-FROM maven:3.8.6-openjdk-17 AS build
+# Use the official OpenJDK 17 image as the base
+FROM openjdk:17-jdk-slim AS build
+
+# Install Maven 3.9.6
+RUN apt-get update && \
+    apt-get install -y wget && \
+    wget https://archive.apache.org/dist/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz && \
+    tar xzf apache-maven-3.9.6-bin.tar.gz -C /opt && \
+    ln -s /opt/apache-maven-3.9.6 /opt/maven && \
+    ln -s /opt/maven/bin/mvn /usr/bin/mvn
 
 # Set the working directory inside the container
 WORKDIR /app
