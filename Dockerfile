@@ -29,7 +29,8 @@ WORKDIR /app
 COPY --from=build /app/target/jenkinsdockerproject-0.0.1-SNAPSHOT.jar ./app.jar
 
 # Expose the port that your Spring Boot application runs on
-EXPOSE 8080
+EXPOSE 9090
 
 # Run the JAR file
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
