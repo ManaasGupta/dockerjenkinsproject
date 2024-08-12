@@ -1,24 +1,20 @@
-FROM openjdk:17-jdk-slim AS build
+# Start with a base image containing Java runtime
+FROM eclipse-temurin:17-jdk-alpine
 
-RUN apt-get update && apt-get install -y wget && apt-get clean && rm -rf /var/lib/apt/lists/*
+# Add Maintainer Info
+LABEL maintainer="manasgpt3@gmail.com"
 
-WORKDIR /app
+# Add a volume pointing to /tmp
+VOLUME /tmp
 
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-RUN chmod +x ./mvnw
+# Make port 8080 available to the world outside this container
+EXPOSE 8080
 
-RUN ./mvnw dependency:go-offline
-RUN ./mvnw clean test verify
+# The application's jar file
+ARG JAR_FILE=target/jenkinsdockerproject-0.0.1-SNAPSHOT.jar
 
-COPY src ./src
-RUN ./mvnw clean package -DskipTests
+# Add the application's jar to the container
+ADD ${JAR_FILE} app.jar
 
-FROM openjdk:17-jdk-slim
-
-WORKDIR /app
-COPY --from=build /app/target/jenkinsdockerproject-0.0.1-SNAPSHOT.jar ./app.jar
-
-EXPOSE 9090
-
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Run the jar file
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
