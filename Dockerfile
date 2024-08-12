@@ -17,7 +17,7 @@ COPY pom.xml ./
 COPY src ./src
 
 # Build the application and run tests
-RUN mvn clean package
+RUN mvn clean test verify
 
 # Use the official OpenJDK image to run the application
 FROM openjdk:17-jdk-slim
